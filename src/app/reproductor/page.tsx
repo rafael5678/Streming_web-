@@ -2,8 +2,10 @@
 // Reproductor interactivo 100% en el cliente
 "use client";
 
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { useReproductor } from "@/controllers/useReproductor";
+import { obtenerPeliculas } from "@/services/peliculaService";
+import type { Pelicula } from "@/models";
 
 function formatTime(s: number): string {
   const m = Math.floor(s / 60);
@@ -13,6 +15,8 @@ function formatTime(s: number): string {
 
 export default function ReproductorPage() {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const [peliculas, setPeliculas] = useState<Pelicula[]>([]);
+  const [peliculaActual, setPeliculaActual] = useState<Pelicula | null>(null);
   const {
     estado,
     toggleReproduccion,
@@ -23,6 +27,23 @@ export default function ReproductorPage() {
     togglePantallaCompleta,
     buscarTiempo,
   } = useReproductor();
+
+  useEffect(() => {
+    let activo = true;
+
+    obtenerPeliculas().then((disponibles) => {
+      if (!activo) return;
+      const id = Number(new URLSearchParams(window.location.search).get("id"));
+      setPeliculas(disponibles);
+      setPeliculaActual(
+        disponibles.find((pelicula) => pelicula.id === id) ?? disponibles[0] ?? null
+      );
+    });
+
+    return () => {
+      activo = false;
+    };
+  }, []);
 
   // Sincronizar video con estado
   useEffect(() => {
@@ -54,6 +75,16 @@ export default function ReproductorPage() {
     if (v && v.duration) v.currentTime = (prog / 100) * v.duration;
   };
 
+  const handlePeliculaChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const pelicula = peliculas.find((item) => item.id === Number(e.target.value));
+    if (!pelicula) return;
+
+    videoRef.current?.pause();
+    setPeliculaActual(pelicula);
+    if (estado.reproduciendo) toggleReproduccion();
+    actualizarProgreso(0, 0);
+  };
+
   const handleFullscreen = () => {
     const v = videoRef.current;
     if (!v) return;
@@ -71,14 +102,41 @@ export default function ReproductorPage() {
         </span>
       </h1>
 
+      <div className="mx-auto mb-4 flex max-w-4xl flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <p className="text-sm text-cine-muted">
+          {peliculaActual ? `Reproduciendo: ${peliculaActual.titulo}` : "Cargando catálogo..."}
+        </p>
+        <select
+          value={peliculaActual?.id ?? ""}
+          onChange={handlePeliculaChange}
+          disabled={peliculas.length === 0}
+          aria-label="Seleccionar película"
+          className="rounded-lg border border-cine-border bg-cine-card px-3 py-2 text-sm text-cine-text disabled:opacity-60"
+        >
+          {peliculas.length === 0 ? (
+            <option value="">Cargando películas...</option>
+          ) : (
+            peliculas.map((pelicula) => (
+              <option key={pelicula.id} value={pelicula.id}>
+                {pelicula.titulo}
+              </option>
+            ))
+          )}
+        </select>
+      </div>
+
       {/* Video Container */}
       <div className="relative mx-auto max-w-4xl overflow-hidden rounded-2xl border border-cine-border bg-black shadow-2xl shadow-cine-accent/10">
         <video
           ref={videoRef}
           className="aspect-video w-full"
-          src="https://www.w3schools.com/html/mov_bbb.mp4"
+          src={peliculaActual?.trailer}
           onTimeUpdate={handleTimeUpdate}
-          poster="https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=1200&h=675&fit=crop"
+          onLoadedMetadata={() => {
+            const video = videoRef.current;
+            if (video) actualizarProgreso(video.currentTime, video.duration || 0);
+          }}
+          poster={peliculaActual?.portada}
         />
 
         {/* Controles */}

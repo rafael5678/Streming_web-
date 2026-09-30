@@ -14,7 +14,7 @@ const peliculasDB: Pelicula[] = [
     categoria: "Ciencia Ficción",
     director: "Ana Vega",
     elenco: ["Laura Díaz", "Carlos Ruiz", "Marta Sánchez"],
-    trailer: "https://www.w3schools.com/html/mov_bbb.mp4",
+    trailer: "https://media.w3.org/2010/05/sintel/trailer.mp4",
   },
   {
     id: 2,
@@ -28,7 +28,7 @@ const peliculasDB: Pelicula[] = [
     categoria: "Suspenso",
     director: "Jorge Méndez",
     elenco: ["Roberto Gómez", "Isabel Torres", "Fernando López"],
-    trailer: "https://www.w3schools.com/html/mov_bbb.mp4",
+    trailer: "https://media.w3.org/2010/05/video/movie_300.mp4",
   },
   {
     id: 3,
@@ -42,7 +42,7 @@ const peliculasDB: Pelicula[] = [
     categoria: "Romance",
     director: "Sofía Blanco",
     elenco: ["Andrea Molina", "Diego Herrera", "Valentina Ríos"],
-    trailer: "https://www.w3schools.com/html/mov_bbb.mp4",
+    trailer: "https://vjs.zencdn.net/v/oceans.mp4",
   },
   {
     id: 4,
@@ -56,7 +56,7 @@ const peliculasDB: Pelicula[] = [
     categoria: "Acción",
     director: "Miguel Ángel Castro",
     elenco: ["Andrés Palacios", "Daniela Vega", "Raúl Briones"],
-    trailer: "https://www.w3schools.com/html/mov_bbb.mp4",
+    trailer: "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
   },
   {
     id: 5,
@@ -70,7 +70,7 @@ const peliculasDB: Pelicula[] = [
     categoria: "Comedia",
     director: "Patricia Reyes",
     elenco: ["Luis García", "Carmen Maura", "Pedro Infante Jr."],
-    trailer: "https://www.w3schools.com/html/mov_bbb.mp4",
+    trailer: "https://media.w3.org/2010/05/bunny/trailer.mp4",
   },
   {
     id: 6,
@@ -84,7 +84,7 @@ const peliculasDB: Pelicula[] = [
     categoria: "Terror",
     director: "Guillermo Navarro",
     elenco: ["Ana de la Reguera", "Tenoch Huerta", "Eiza González"],
-    trailer: "https://www.w3schools.com/html/mov_bbb.mp4",
+    trailer: "https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4",
   },
 ];
 
